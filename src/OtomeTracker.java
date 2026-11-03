@@ -1,4 +1,7 @@
 import java.io.*;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
+
 public class OtomeTracker {
     public static void main(String[] args) {
         IO.println("Welcome to the Otome Tracker!");
@@ -15,7 +18,67 @@ public class OtomeTracker {
                 }
 
                 if (choice == 1) {
-                    IO.println("Adding game --> will code later!!");
+                    IO.println("Adding game...");
+                    String gameName = "";
+
+                    //making sure input is valid
+                    while (true) {
+                        gameName = IO.readln("Enter otome game name\n");
+                        if (gameName.isBlank()) {
+                            IO.println("Empty game name. Please retype.");
+                            continue;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    //collect number of routes
+                    int routeNumber = 0;
+                    while (true) {
+                        try {
+                            routeNumber = Integer.parseInt(IO.readln("Enter number of routes as a number (ex: 1)\n"));
+                            if (routeNumber > 0) {
+                                break;
+                            } else {
+                                IO.println("Invalid route number. Route number must be greater than 0. Try again.");
+                                continue;
+                            }
+                        } catch (NumberFormatException e) {
+                            IO.println("Invalid input! Try again.");
+                        }
+                    }
+
+                    //collect names of the routes
+                    ArrayList<String> routeNames = new ArrayList<>();
+                    while (routeNumber > 0) {
+                        String s = IO.readln("Enter love interest name.\n");
+                        if (s.isBlank()) {
+                            IO.println("You need to enter in an actual name. Try again.");
+                            continue;
+                        }
+                        IO.println("Saving " + s + "...");
+                        routeNames.add(s);
+                        routeNumber--;
+                    }
+
+                    //collect completion status
+                    String completionStatus = "";
+                    while (true) {
+                        IO.println("Please enter the completion status of " + gameName + " from one of the following: ");
+                        IO.println("Completed");
+                        IO.println("In progress");
+                        completionStatus = IO.readln("Backlog\n");
+                        if (completionStatus.isBlank() || !completionStatus.equalsIgnoreCase("completed")
+                            && !completionStatus.equalsIgnoreCase("in progress") && !completionStatus.equalsIgnoreCase("backlog")) {
+                            IO.println("Please enter a valid input. Try again.");
+                            continue;
+                        } else {
+                            IO.println("Saving completion status...");
+                            break;
+                        }
+                    }
+                    IO.println("End of today's work!");
+
                 } else if (choice == 2) {
                     IO.println("Selecting game --> will code later!!");
                 } else if (choice == 3) {
