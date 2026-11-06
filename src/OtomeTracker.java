@@ -24,6 +24,13 @@ public class OtomeTracker {
                     //making sure input is valid
                     while (true) {
                         gameName = IO.readln("Enter otome game name\n");
+                        //checking if game already exists
+                        File f = new File(gameName + ".txt");
+                        if (f.exists()) {
+                            IO.println("Game already exists! Please try again.");
+                            continue;
+                        }
+
                         if (gameName.isBlank()) {
                             IO.println("Empty game name. Please retype.");
                             continue;
@@ -77,6 +84,25 @@ public class OtomeTracker {
                             break;
                         }
                     }
+
+                    //saving it to a file
+                    try (PrintWriter pw = new PrintWriter(new FileOutputStream(gameName + ".txt"))) {
+                        pw.println(gameName);
+
+                        String str = "";
+                        for (String s : routeNames) {
+                            str += s + ",";
+                        }
+                        if (str.endsWith(",")) {
+                            str = str.substring(0, str.length() - 1);
+                        }
+                        pw.println(str);
+
+                        pw.println(completionStatus);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     IO.println("End of today's work!");
 
                 } else if (choice == 2) {
