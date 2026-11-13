@@ -146,8 +146,40 @@ public class OtomeTracker {
                         File selectedGame = fileArrayList.get(n - 1);
                         String selectedGameName = selectedGame.getName().substring(0, selectedGame.getName().length() - 4);
                         IO.println("Selected: " + (n) + " - " + selectedGameName);
-                        IO.println("End of today's work.");
-                        break;
+
+                        int p = 0;
+                        while (true) {
+                            IO.println("Please input the number corresponding to the action you would like to take with " + selectedGameName + ".");
+                            IO.println("1: View progress");
+                            IO.println("2: Change progress");
+                            try {
+                                p = Integer.parseInt(IO.readln());
+                                //check invalid number
+                                if (p < 1 || p > 2) {
+                                    throw new NumberFormatException();
+                                }
+                                break;
+                            } catch (NumberFormatException e) {
+                                IO.println("Invalid input! Try again.");
+                                continue;
+                            }
+                        }
+
+                        //Viewing progress.
+                        String progress = "";
+                        if (p == 1) {
+                            String line = "";
+                            try (BufferedReader br = new BufferedReader(new FileReader(selectedGame))) {
+                                for (int i = 0; i < 3; i++) {
+                                    line = br.readLine();
+                                }
+                                progress = line;
+                                IO.println("Progress for " + selectedGameName + ": " + progress);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
 
                     }
 
