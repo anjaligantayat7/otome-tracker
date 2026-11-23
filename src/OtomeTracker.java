@@ -82,6 +82,13 @@ public class OtomeTracker {
                             continue;
                         } else {
                             IO.println("Saving completion status...");
+                            if (completionStatus.equalsIgnoreCase("in progress")) {
+                                completionStatus = "In progress";
+                            } else if (completionStatus.equalsIgnoreCase("completed")) {
+                                completionStatus = "Completed";
+                            } else if (completionStatus.equalsIgnoreCase("backlog")) {
+                                completionStatus = "Backlog";
+                            }
                             break;
                         }
                     }
@@ -150,8 +157,8 @@ public class OtomeTracker {
                         int p = 0;
                         while (true) {
                             IO.println("Please input the number corresponding to the action you would like to take with " + selectedGameName + ".");
-                            IO.println("1: View progress");
-                            IO.println("2: Change progress");
+                            IO.println("1: View completion status");
+                            IO.println("2: Change completion status");
                             try {
                                 p = Integer.parseInt(IO.readln());
                                 //check invalid number
@@ -166,19 +173,69 @@ public class OtomeTracker {
                         }
 
                         //Viewing progress.
-                        String progress = "";
+                        String completionStatus = "";
                         if (p == 1) {
+                            IO.println("Viewing progress for " + selectedGameName + "...");
                             String line = "";
                             try (BufferedReader br = new BufferedReader(new FileReader(selectedGame))) {
                                 for (int i = 0; i < 3; i++) {
                                     line = br.readLine();
                                 }
-                                progress = line;
-                                IO.println("Progress for " + selectedGameName + ": " + progress);
+                                completionStatus = line;
+                                IO.println("Progress for " + selectedGameName + ": " + completionStatus);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             break;
+                        }
+
+                        //Changing progress
+                        if (p == 2) {
+                            while (true) {
+                                IO.println("Changing progress for " + selectedGameName + "...");
+                                IO.println("Please enter the new completion status of " + selectedGameName + " from one of the following: ");
+                                IO.println("Completed");
+                                IO.println("In progress");
+                                completionStatus = IO.readln("Backlog\n");
+                                if (completionStatus.isBlank() || !completionStatus.equalsIgnoreCase("completed")
+                                        && !completionStatus.equalsIgnoreCase("in progress") && !completionStatus.equalsIgnoreCase("backlog")) {
+                                    IO.println("Please enter a valid input. Try again.");
+                                    continue;
+                                } else {
+                                    IO.println("Saving completion status...");
+                                    //Fix capitalization
+                                    if (completionStatus.equalsIgnoreCase("in progress")) {
+                                        completionStatus = "In progress";
+                                    } else if (completionStatus.equalsIgnoreCase("completed")) {
+                                        completionStatus = "Completed";
+                                    } else if (completionStatus.equalsIgnoreCase("backlog")) {
+                                        completionStatus = "Backlog";
+                                    }
+                                    //will figure out tomorrow
+                                    // has arrived
+                                    //Saving first two line of file (everything BUT completion)
+                                    String name = "";
+                                    String routes = "";
+                                    try (BufferedReader br = new BufferedReader(new FileReader(selectedGame))) {
+                                        name = br.readLine();
+                                        routes = br.readLine();
+                                        //Save everything to the file with the game's name
+                                        try (PrintWriter pw = new PrintWriter(new FileOutputStream(selectedGameName + ".txt"))) {
+                                            pw.println(name);
+                                            pw.println(routes);
+                                            pw.println(completionStatus);
+                                            IO.println("Completion status saved!");
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                }
+                            }
+                            break;
+
                         }
 
                     }
