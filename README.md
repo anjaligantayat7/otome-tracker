@@ -20,12 +20,19 @@ This program can add or select otome games. If the user chooses to add an otome 
 
 ## Setup
 
-Step-by-step: how does someone who just cloned your repo get it
-running? -> Pending for now
+1. Install JDK 25.
+2. Download and extract this repository.
+3. Open terminal and cd into the otome-tracker folder.
+4. Compile the program using this: `javac src/OtomeTracker.java`
+5. Run the program using this: `java -cp src OtomeTracker`
+
 
 ## Usage
 
-How to actually run the thing, with examples. -> Pending for now
+The menu has three options: Add game, select game, and quit. Type the corresponding number and press Enter to choose which action you want to take.
+- Add game: Enter the otome game name, number of routes/love interests, love interest names, and completion status when prompted. Ex: "Collar x Malice", 5, "Yanagi Aiji", "Okazaki Kei", "Shiraishi Kageyuki", "Mineo Enomoto", "Takeru Sasazuka", "Completed". Do not enter the names in one go, enter one name, press the enter key, and then enter the next. Quotations are not part of the input.
+- Select game: Select a game from the ones you have inputted by typing in the corresponding number. Choose to either view or change the completion status of this game by typing in the corresponding number. Ex: 1 (corresponds to Collar x Malice), 1 (corresponds to viewing completion status).
+- Quit: Quits program.
 
 ## Roadmap
 
