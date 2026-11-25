@@ -93,6 +93,9 @@ public class OtomeTracker {
                         }
                     }
 
+                    //collect game notes
+                    String gameNotes = IO.readln("Please enter any game notes for " + gameName + ".\n");
+
                     //saving it to a file
                     try (PrintWriter pw = new PrintWriter(new FileOutputStream(gameName + ".txt"))) {
                         pw.println(gameName);
@@ -107,6 +110,7 @@ public class OtomeTracker {
                         pw.println(str);
 
                         pw.println(completionStatus);
+                        pw.println(gameNotes);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -158,11 +162,13 @@ public class OtomeTracker {
                         while (true) {
                             IO.println("Please input the number corresponding to the action you would like to take with " + selectedGameName + ".");
                             IO.println("1: View completion status");
-                            IO.println("2: Change completion status");
+                            IO.println("2: Edit completion status");
+                            IO.println("3: View game notes");
+                            IO.println("4: Edit game notes");
                             try {
                                 p = Integer.parseInt(IO.readln());
                                 //check invalid number
-                                if (p < 1 || p > 2) {
+                                if (p < 1 || p > 4) {
                                     throw new NumberFormatException();
                                 }
                                 break;
@@ -213,17 +219,21 @@ public class OtomeTracker {
                                     }
                                     //will figure out tomorrow
                                     // has arrived
-                                    //Saving first two line of file (everything BUT completion)
+                                    //Saving first two line of file and the last line (everything BUT completion)
                                     String name = "";
                                     String routes = "";
+                                    String gameNotes = "";
                                     try (BufferedReader br = new BufferedReader(new FileReader(selectedGame))) {
                                         name = br.readLine();
                                         routes = br.readLine();
+                                        br.readLine();
+                                        gameNotes = br.readLine();
                                         //Save everything to the file with the game's name
                                         try (PrintWriter pw = new PrintWriter(new FileOutputStream(selectedGameName + ".txt"))) {
                                             pw.println(name);
                                             pw.println(routes);
                                             pw.println(completionStatus);
+                                            pw.println(gameNotes);
                                             IO.println("Completion status saved!");
                                         } catch (IOException e) {
                                             e.printStackTrace();
@@ -236,6 +246,48 @@ public class OtomeTracker {
                             }
                             break;
 
+                        }
+
+                        if (p == 3) {
+                            IO.println("Viewing game notes for " + selectedGameName + "...");
+                            String line = "";
+                            try (BufferedReader br = new BufferedReader(new FileReader(selectedGame))) {
+                                for (int i = 0; i < 4; i++) {
+                                    line = br.readLine();
+                                }
+                                IO.println("Game notes for " + selectedGameName + ":");
+                                IO.println(line);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+
+                        if (p == 4) {
+                            IO.println("Editing game notes for " + selectedGameName + "...");
+                            String gameNotes = IO.readln("Please enter new game notes for " + selectedGameName + ".\n");
+                            //save old file
+                            String name = "";
+                            String routes = "";
+                            String completion = "";
+                            try (BufferedReader br = new BufferedReader(new FileReader(selectedGame))) {
+                                name = br.readLine();
+                                routes = br.readLine();
+                                completion = br.readLine();
+                                //Save everything to the file with the game's name
+                                try (PrintWriter pw = new PrintWriter(new FileOutputStream(selectedGameName + ".txt"))) {
+                                    pw.println(name);
+                                    pw.println(routes);
+                                    pw.println(completion);
+                                    pw.println(gameNotes);
+                                    IO.println("Game notes status saved!");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
                         }
 
                     }
