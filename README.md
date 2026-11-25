@@ -41,6 +41,9 @@ The menu has three options: Add game, select game, and quit. Type the correspond
 - [x] Editable game notes
 - [ ] Editable route notes
 
+## Video Walkthrough
+[Walkthrough](https://youtu.be/Ed8p3z9o_mY)
+
 ## Author
 
 Anjali Gantayat, https://github.com/anjaligantayat7
