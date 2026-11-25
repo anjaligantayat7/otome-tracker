@@ -1,12 +1,11 @@
 import java.io.*;
-import java.sql.Array;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class OtomeTracker {
     public static void main(String[] args) {
         IO.println("Welcome to the Otome Tracker!");
 
+        // Keeps program running until user manually chooses the Quit option.
         while(true) {
             try {
                 IO.println("Please enter a number: ");
@@ -22,10 +21,10 @@ public class OtomeTracker {
                     IO.println("Adding game...");
                     String gameName = "";
 
-                    //making sure input is valid
+                    // Make sure input is valid (does not already exist + isn't a blank line) so that no files get overwritten.
                     while (true) {
-                        gameName = IO.readln("Enter otome game name\n");
-                        //checking if game already exists
+                        gameName = IO.readln("Enter otome game name.\n");
+
                         File f = new File(gameName + ".txt");
                         if (f.exists()) {
                             IO.println("Game already exists! Please try again.");
@@ -40,7 +39,7 @@ public class OtomeTracker {
                         }
                     }
 
-                    //collect number of routes
+                    // Collect the number of routes/love interests so we can use a while loop asking for the exact amount of names.
                     int routeNumber = 0;
                     while (true) {
                         try {
@@ -56,7 +55,7 @@ public class OtomeTracker {
                         }
                     }
 
-                    //collect names of the routes
+                    // Collect the names of the love interests.
                     ArrayList<String> routeNames = new ArrayList<>();
                     while (routeNumber > 0) {
                         String s = IO.readln("Enter love interest name.\n");
@@ -69,7 +68,7 @@ public class OtomeTracker {
                         routeNumber--;
                     }
 
-                    //collect completion status
+                    // Collect completion status.
                     String completionStatus = "";
                     while (true) {
                         IO.println("Please enter the completion status of " + gameName + " from one of the following: ");
@@ -82,6 +81,7 @@ public class OtomeTracker {
                             continue;
                         } else {
                             IO.println("Saving completion status...");
+
                             if (completionStatus.equalsIgnoreCase("in progress")) {
                                 completionStatus = "In progress";
                             } else if (completionStatus.equalsIgnoreCase("completed")) {
@@ -93,10 +93,10 @@ public class OtomeTracker {
                         }
                     }
 
-                    //collect game notes
                     String gameNotes = IO.readln("Please enter any game notes for " + gameName + ".\n");
 
-                    //saving it to a file
+                    // Saving all the game details to a file in the order of: name --> routes (separated by commas)
+                    // --> completion status --> game notes
                     try (PrintWriter pw = new PrintWriter(new FileOutputStream(gameName + ".txt"))) {
                         pw.println(gameName);
 
@@ -119,10 +119,10 @@ public class OtomeTracker {
                     IO.println("Selecting game...");
 
                     while (true) {
-                        //get list of all files --> search up how to do that
+                        // Get list of all files within current directory.
                         File f = new File(".");
                         File[] files = f.listFiles();
-                        //trying to get only txt files!
+                        // Singling out the txt files (we don't want the Eisenhower matrix or the system diagram stuff).
                         ArrayList<File> fileArrayList = new ArrayList<>();
                         for (File file : files) {
                             if (file.isFile() && file.getName().endsWith(".txt")) {
@@ -130,13 +130,13 @@ public class OtomeTracker {
                             }
                         }
 
-                        //check if there are games saved
+                        // Check if there are any games saved.
                         if (fileArrayList.isEmpty()) {
-                            IO.println("No games are saved. Please enter games before trying to select them");
+                            IO.println("No games are saved. Please enter games before trying to select any.");
                             break;
                         }
 
-                        IO.println("Please input the number corresponding to the game you would like to select");
+                        IO.println("Please input the number corresponding to the game you would like to select.");
 
                         for (int i = 0; i < fileArrayList.size(); i++) {
                             IO.print(i + 1 + ": ");
@@ -145,7 +145,7 @@ public class OtomeTracker {
                         int n = 0;
                         try {
                             n = Integer.parseInt(IO.readln());
-                            //check invalid number
+
                             if (n < 1 || n > fileArrayList.size()) {
                                 throw new NumberFormatException();
                             }
@@ -158,6 +158,7 @@ public class OtomeTracker {
                         String selectedGameName = selectedGame.getName().substring(0, selectedGame.getName().length() - 4);
                         IO.println("Selected: " + (n) + " - " + selectedGameName);
 
+                        // Get user's desired action.
                         int p = 0;
                         while (true) {
                             IO.println("Please input the number corresponding to the action you would like to take with " + selectedGameName + ".");
@@ -167,7 +168,7 @@ public class OtomeTracker {
                             IO.println("4: Edit game notes");
                             try {
                                 p = Integer.parseInt(IO.readln());
-                                //check invalid number
+
                                 if (p < 1 || p > 4) {
                                     throw new NumberFormatException();
                                 }
@@ -178,7 +179,6 @@ public class OtomeTracker {
                             }
                         }
 
-                        //Viewing progress.
                         String completionStatus = "";
                         if (p == 1) {
                             IO.println("Viewing progress for " + selectedGameName + "...");
@@ -195,10 +195,9 @@ public class OtomeTracker {
                             break;
                         }
 
-                        //Changing progress
                         if (p == 2) {
                             while (true) {
-                                IO.println("Changing progress for " + selectedGameName + "...");
+                                IO.println("Editing progress for " + selectedGameName + "...");
                                 IO.println("Please enter the new completion status of " + selectedGameName + " from one of the following: ");
                                 IO.println("Completed");
                                 IO.println("In progress");
@@ -209,7 +208,7 @@ public class OtomeTracker {
                                     continue;
                                 } else {
                                     IO.println("Saving completion status...");
-                                    //Fix capitalization
+
                                     if (completionStatus.equalsIgnoreCase("in progress")) {
                                         completionStatus = "In progress";
                                     } else if (completionStatus.equalsIgnoreCase("completed")) {
@@ -217,9 +216,8 @@ public class OtomeTracker {
                                     } else if (completionStatus.equalsIgnoreCase("backlog")) {
                                         completionStatus = "Backlog";
                                     }
-                                    //will figure out tomorrow
-                                    // has arrived
-                                    //Saving first two line of file and the last line (everything BUT completion)
+
+                                    // FileOutputStream clears the file, so all the other lines need to be saved beforehand.
                                     String name = "";
                                     String routes = "";
                                     String gameNotes = "";
@@ -228,7 +226,7 @@ public class OtomeTracker {
                                         routes = br.readLine();
                                         br.readLine();
                                         gameNotes = br.readLine();
-                                        //Save everything to the file with the game's name
+
                                         try (PrintWriter pw = new PrintWriter(new FileOutputStream(selectedGameName + ".txt"))) {
                                             pw.println(name);
                                             pw.println(routes);
@@ -266,7 +264,7 @@ public class OtomeTracker {
                         if (p == 4) {
                             IO.println("Editing game notes for " + selectedGameName + "...");
                             String gameNotes = IO.readln("Please enter new game notes for " + selectedGameName + ".\n");
-                            //save old file
+                            // Saving every line BUT game notes so that file can be rewritten with new game notes.
                             String name = "";
                             String routes = "";
                             String completion = "";
@@ -274,13 +272,13 @@ public class OtomeTracker {
                                 name = br.readLine();
                                 routes = br.readLine();
                                 completion = br.readLine();
-                                //Save everything to the file with the game's name
+
                                 try (PrintWriter pw = new PrintWriter(new FileOutputStream(selectedGameName + ".txt"))) {
                                     pw.println(name);
                                     pw.println(routes);
                                     pw.println(completion);
                                     pw.println(gameNotes);
-                                    IO.println("Game notes status saved!");
+                                    IO.println("Game notes saved!");
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
